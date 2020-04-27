@@ -1,74 +1,41 @@
-const { gql } = require("apollo-server");
+const { gql } = require(`apollo-server-express`);
 
-const typeDefs = gql`
-  # schema
-  # exclamation means required / never null
-  type Rocket {
-    id: ID!
-    name: String
-    type: String
-  }
-
+const TYPEDEFS = gql`
   type User {
-    id: ID!
+    id: ID
+    email: String
+    userName: String
+    password: String
+    location: String
+    hobby: String
+    token: String
+    created_at: String
+  }
+
+  input UserInput {
     email: String!
-    trips: [Launch]!
+    userName: String
+    password: String!
+    location: String
+    hobby: String
   }
-
-  type Mission {
-    name: String
-    missionPatch(mission: String, size: PatchSize): String
-  }
-
-  enum PatchSize {
-    SMALL
-    LARGE
-  }
-
-  type Launch {
-    id: ID!
-    site: String
-    mission: Mission
-    rocket: Rocket
-    isBooked: Boolean!
-  }
-
   type Query {
-    launches( # replace the current launches query with this one.
-      """
-      The number of results to show. Must be >= 1. Default = 20
-      """
-      pageSize: Int
-      """
-      If you add a cursor here, it will only return results _after_ this cursor
-      """
-      after: String
-    ): LaunchConnection!
-    launch(id: ID!): Launch
-    me: User
+    allUsers: [User]
+    findUser: User
+    findMe: User
   }
-
-  """
-  Simple wrapper around our list of launches that contains a cursor to the
-  last item in the list. Pass this cursor to the launches query to fetch results
-  after these.
-  """
-  type LaunchConnection { # add this below the Query type as an additional type.
-    cursor: String!
-    hasMore: Boolean!
-    launches: [Launch]!
-  }
-
   type Mutation {
-    bookTrips(launchIds: [ID]!): TripUpdateResponse!
-    cancelTrip(launchId: ID!): TripUpdateResponse!
-    login(email: String): String #login token
+    createUser(userInput: UserInput!): UserAPIResponse!
+    login(loginInput: UserInput!): UserAPIResponse!
+    logout(token: String): UserAPIResponse!
   }
-
-  type TripUpdateResponse {
+  type UserAPIResponse {
     success: Boolean!
     message: String
-    launches: [Launch]
+    user: User
+    users: [User]
+    token: String
   }
 `;
-module.exports = typeDefs;
+
+module.exports = TYPEDEFS;

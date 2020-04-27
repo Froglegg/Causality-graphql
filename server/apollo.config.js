@@ -1,5 +1,5 @@
 module.exports = {
   service: {
-    name: "causalityGraph",
+    name: "Causality",
   },
 };
