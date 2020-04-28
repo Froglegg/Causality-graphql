@@ -23,6 +23,23 @@ export const typeDefs = gql`
     token: String
     created_at: String
   }
+
+  input UserInput {
+    email: String!
+    userName: String
+    password: String!
+    location: String
+    hobby: String
+  }
+
+  type UserAPIResponse {
+    success: Boolean!
+    message: String
+    user: User
+    users: [User]
+    token: String
+  }
+
   type Journal {
     id: ID
     userID: ID
@@ -59,17 +76,6 @@ interface AppResolvers extends Resolvers {
 
 export const resolvers: AppResolvers = {
   Query: {
-    isLoggedIn: (parent, args, { cache }) => {
-      console.log("running resolver, is loggedIn");
-      const queryResult = cache.readQuery({
-        query: userService.query.isLoggedIn,
-      });
-      if (queryResult) {
-        console.log(queryResult);
-        return queryResult;
-      }
-      return false;
-    },
     getMyInfo: (parents, args, { cache }) => {
       console.log("running resolver, get my info");
       const queryResult = cache.readQuery({
@@ -82,5 +88,17 @@ export const resolvers: AppResolvers = {
       return false;
     },
   },
-  Mutation: {},
+  Mutation: {
+    login: (parent, args, { cache }) => {
+      console.log("runnin resolver, login");
+      const queryResult = cache.readQuery({
+        query: userService.mutation.login,
+      });
+      if (queryResult) {
+        console.log(queryResult);
+        return queryResult;
+      }
+      return false;
+    },
+  },
 };

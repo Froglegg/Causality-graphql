@@ -1,13 +1,6 @@
 import gql from "graphql-tag";
 
 const query = {
-  isLoggedIn: gql`
-    {
-      isLoggedIn @client {
-        boolean
-      }
-    }
-  `,
   getMyInfo: gql`
     query {
       findMe {
@@ -18,6 +11,23 @@ const query = {
   `,
 };
 
-const mutation = {};
+const mutation = {
+  login: gql`
+    mutation login($input: UserInput!) {
+      login(loginInput: $input) {
+        success
+        message
+        token
+        user {
+          id
+          userName
+          email
+          password
+          token
+        }
+      }
+    }
+  `,
+};
 
 export { query, mutation };

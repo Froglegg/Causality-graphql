@@ -1,4 +1,5 @@
 import React from "react";
+import SignIn from "../Components/signin";
 
 function Login() {
   const submitLogin = () => {
@@ -9,8 +10,7 @@ function Login() {
   };
   return (
     <div>
-      <h1>LOGIN</h1>
-
+      <SignIn />
       <button onClick={() => submitLogin()}>LOG IN (hit refresh)</button>
     </div>
   );
