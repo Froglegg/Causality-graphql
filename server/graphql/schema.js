@@ -19,6 +19,11 @@ const TYPEDEFS = gql`
     location: String
     hobby: String
   }
+
+  input updateUserInput {
+    userName: String
+    hobby: String
+  }
   type Query {
     allUsers: [User]
     findUser: User
@@ -28,6 +33,10 @@ const TYPEDEFS = gql`
     createUser(userInput: UserInput!): UserAPIResponse!
     login(loginInput: UserInput!): UserAPIResponse!
     logout(token: String): UserAPIResponse!
+    updateUser(
+      email: String!
+      updateUserInput: updateUserInput
+    ): UserAPIResponse!
   }
   type UserAPIResponse {
     success: Boolean!

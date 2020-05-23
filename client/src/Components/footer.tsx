@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 
 import MenuItem from "./menu-item";
-
+import LogoutButton from "./logoutButton";
 import { colors, unit } from "../styles";
 
 export default function Footer() {
@@ -10,8 +10,9 @@ export default function Footer() {
     <Container>
       <InnerContainer>
         <MenuItem to="/">Home</MenuItem>
-        <MenuItem to="/">#</MenuItem>
-        <MenuItem to="/">#</MenuItem>
+        <MenuItem to="/journals">Journals</MenuItem>
+        <MenuItem to="/profile">Profile</MenuItem>
+        <LogoutButton />
       </InnerContainer>
     </Container>
   );
@@ -33,7 +34,7 @@ const Container = styled("footer")({
 const InnerContainer = styled("div")({
   display: "flex",
   alignItems: "center",
-  maxWidth: 460,
+  maxWidth: 560,
   padding: unit * 2.5,
   margin: "0 auto",
 });

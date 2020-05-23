@@ -8,23 +8,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Causality
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -46,32 +33,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props: any) {
+export default function EditProfile(props: any) {
   const classes = useStyles();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState(
+    props.userData.userName ? props.userData.userName : ""
+  );
+  const [hobby, setHobby] = useState(
+    props.userData.hobby ? props.userData.hobby : ""
+  );
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <AccountCircleIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Edit account
         </Typography>
         <form
           className={classes.form}
           noValidate
           onSubmit={(e: any) => {
             e.preventDefault();
-            props.login({
+
+            props.updateUser({
               variables: {
-                loginInput: {
-                  email: email,
-                  password: password,
+                email: props.userData.email,
+                updateUserInput: {
+                  userName: userName,
+                  hobby: hobby,
                 },
               },
             });
@@ -82,28 +75,26 @@ export default function SignIn(props: any) {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="userName"
+            label="User Name"
+            name="userName"
+            autoComplete="userName"
+            defaultValue={props.userData.userName}
             autoFocus
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setUserName(e.target.value)}
           />
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            id="hobby"
+            label="Hobby"
+            name="hobby"
+            autoComplete="hobby"
+            defaultValue={props.userData.hobby}
+            autoFocus
+            onChange={(e) => setHobby(e.target.value)}
           />
           <Button
             type="submit"
@@ -112,27 +103,23 @@ export default function SignIn(props: any) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Submit
           </Button>
-          <Grid container>
-            <Grid item>
-              <Link
-                variant="body2"
-                onClick={() => {
-                  props.setNewAccount(!props.newAccount);
-                }}
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              props.goBack();
+            }}
+          >
+            Go Back
+          </Button>
         </form>
-        {props.loading && <p>Loading...</p>}
-        {props.error && <p>Error :( Please try again</p>}
+        {props.updateLoading && <p>Loading...</p>}
+        {props.updateError && <p>Error :( Please try again</p>}
+        {props.updateSuccess && <p>Success!</p>}
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

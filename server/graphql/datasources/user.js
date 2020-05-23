@@ -22,6 +22,10 @@ class UserAPI extends DataSource {
     this.context = config.context;
   }
 
+  generateAuthToken(userID, email) {
+    return jwt.sign({ id: userID, email: email }, process.env.JWT_KEY);
+  }
+
   async createUser(userInput) {
     const email = userInput.email ? userInput.email : "";
 
@@ -66,8 +70,24 @@ class UserAPI extends DataSource {
     return user ? user : false;
   }
 
-  generateAuthToken(userID, email) {
-    return jwt.sign({ id: userID, email: email }, process.env.JWT_KEY);
+  async putUser(email, updateUserInput) {
+    const userUpdate = await this.store("users")
+      .where({ email: email })
+      .update({
+        userName: updateUserInput.userName,
+        hobby: updateUserInput.hobby,
+      })
+      .returning("*")
+      .then((res) => {
+        return res[0] ? res[0] : null;
+      })
+      .catch((err) => {
+        console.log(err);
+        return {
+          error: err,
+        };
+      });
+    return userUpdate ? userUpdate : false;
   }
 
   async login(loginInput) {

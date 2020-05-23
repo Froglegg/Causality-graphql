@@ -46,11 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props: any) {
+export default function SignUp(props: any) {
   const classes = useStyles();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,16 +61,17 @@ export default function SignIn(props: any) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Create Account
         </Typography>
         <form
           className={classes.form}
           noValidate
           onSubmit={(e: any) => {
             e.preventDefault();
-            props.login({
+            props.signUp({
               variables: {
-                loginInput: {
+                input: {
+                  userName: userName,
                   email: email,
                   password: password,
                 },
@@ -77,6 +79,18 @@ export default function SignIn(props: any) {
             });
           }}
         >
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="userName"
+            label="User Name"
+            name="userName"
+            autoComplete="userName"
+            autoFocus
+            onChange={(e) => setUserName(e.target.value)}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -112,7 +126,7 @@ export default function SignIn(props: any) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Create New Account
           </Button>
           <Grid container>
             <Grid item>
@@ -122,7 +136,7 @@ export default function SignIn(props: any) {
                   props.setNewAccount(!props.newAccount);
                 }}
               >
-                {"Don't have an account? Sign Up"}
+                {"Have an account already? Sign In"}
               </Link>
             </Grid>
           </Grid>

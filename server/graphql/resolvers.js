@@ -16,7 +16,9 @@ module.exports = {
       // protected API route
       // token is accessed via the request header... on the client, specify request header in HTTP Header field, pulling it from local storage etc.
       const decoded = decodedToken(req);
+
       const myAccount = await dataSources.userAPI.findUser(decoded.email);
+
       return myAccount[0];
     },
   },
@@ -66,6 +68,31 @@ module.exports = {
         message: decoded
           ? `logged out, auth header removed ${logout}`
           : `something went wrong`,
+      };
+    },
+    updateUser: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      const userUpdate = await dataSources.userAPI.putUser(
+        decoded.email,
+        args.updateUserInput
+      );
+
+      return {
+        success:
+          !userUpdate ||
+          userUpdate == null ||
+          userUpdate.emailInvalid ||
+          userUpdate.error
+            ? false
+            : true,
+        message: userUpdate.emailInvalid
+          ? `422 error, Not a valid email address`
+          : userUpdate.error
+          ? `500 error, error updating user. Details: ${userUpdate.error.detail}`
+          : `Update successful, ${userUpdate.userName}!`,
+
+        user: userUpdate,
       };
     },
   },
