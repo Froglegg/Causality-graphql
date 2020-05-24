@@ -54,9 +54,16 @@ const mutation = {
         user {
           userName
           email
-          password
-          token
+          hobby
         }
+      }
+    }
+  `,
+  deleteUser: gql`
+    mutation deleteUser($password: String!) {
+      deleteUser(password: $password) {
+        success
+        message
       }
     }
   `,

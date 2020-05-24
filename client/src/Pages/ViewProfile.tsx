@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -6,42 +6,70 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
 
-import * as userService from "../Services/userService";
+import FormDialog from "../Components/formDialog";
+import EditProfile from "../Components/editProfile";
+
+import * as userService from "../GQL/Services/userService";
+
+import { Redirect } from "@reach/router";
+
 import { useApolloClient, useMutation, useQuery } from "@apollo/react-hooks";
 import ApolloClient from "apollo-client";
 
-import EditProfile from "../Components/editProfile";
-
 function ViewProfile(props: any) {
   const client: ApolloClient<any> = useApolloClient();
+  const [userDetails, setUserDetails] = useState({
+    userName: "",
+    email: "",
+    hobby: "",
+  });
+  const [showEdit, setShowEdit] = useState(false);
 
   const [
     updateUser,
     { loading: updateLoading, error: updateError },
   ] = useMutation<any>(userService.mutation.updateUser, {
     onCompleted({ updateUser }) {
-      console.log(updateUser);
+      const { userName, email, hobby } = updateUser.user;
+
+      setUserDetails({
+        userName: userName,
+        email: email,
+        hobby: hobby,
+      });
+      setShowEdit(false);
     },
   });
-  if (updateError) {
-    console.log(updateError);
-  }
+
   const { data: userData, loading: getLoading, error: getError } = useQuery(
     userService.query.getMyInfo
   );
-  if (getError) {
-    console.log(getError);
-  }
-  if (!getLoading && !getError) {
-    console.log(userData);
-    console.log(userData.findMe.userName);
-  }
-  const [showEdit, setShowEdit] = useState(false);
+
+  useEffect(() => {
+    if (userData && userData.findMe) {
+      setUserDetails({
+        userName: userData.findMe.userName,
+        email: userData.findMe.email,
+        hobby: userData.findMe.hobby,
+      });
+    }
+  }, [userData]);
+
+  const [
+    deleteUser,
+    { loading: deleteLoading, error: deleteError },
+  ] = useMutation<any>(userService.mutation.deleteUser, {
+    onCompleted({ deleteUser }) {
+      localStorage.clear();
+      client.writeData({ data: { isLoggedIn: false } });
+      client.clearStore();
+      window.location.reload(false);
+    },
+  });
 
   return (
-    <Container component="main" maxWidth="xs">
+    <>
       <h1>My Profile</h1>
-      <br />
       <br />
 
       {showEdit ? (
@@ -50,23 +78,23 @@ function ViewProfile(props: any) {
           updateUser={updateUser}
           updateLoading={updateLoading}
           updateError={updateError}
-          userData={!getLoading && !getError ? userData.findMe : null}
+          userData={userDetails}
         />
       ) : (
         <Grid container spacing={3}>
           {!getLoading && !getError ? (
             <>
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <h5>User Name</h5>
-                {userData.findMe.userName}
+                {userDetails.userName}
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <h5>Email</h5>
-                {userData.findMe.email}
+                {userDetails.email}
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12}>
                 <h5>Hobby</h5>
-                {userData.findMe.hobby}
+                {userDetails.hobby}
               </Grid>
             </>
           ) : !getLoading && getError ? (
@@ -77,17 +105,34 @@ function ViewProfile(props: any) {
         </Grid>
       )}
       <br />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setShowEdit(!showEdit);
-        }}
-        style={showEdit ? { display: "none" } : {}}
-      >
-        EDIT PROFILE
-      </Button>
-    </Container>
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setShowEdit(!showEdit);
+          }}
+          style={showEdit ? { display: "none" } : {}}
+        >
+          EDIT PROFILE
+        </Button>
+      </div>
+      <br />
+      <div>
+        <FormDialog
+          buttonColor="secondary"
+          buttonText="DELETE ACCOUNT"
+          dialogTitle="DELETE ACCOUNT"
+          dialogText="Please enter your password to delete your account"
+          textFieldLabel="Password"
+          textFieldId="password"
+          textFieldType="password"
+          handleSubmit={deleteUser}
+          deleteUser={true}
+          hide={showEdit ? true : false}
+        />
+      </div>
+    </>
   );
 }
 

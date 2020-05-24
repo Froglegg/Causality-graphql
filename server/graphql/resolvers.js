@@ -95,5 +95,28 @@ module.exports = {
         user: userUpdate,
       };
     },
+    deleteUser: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      const deleteUser = await dataSources.userAPI.deleteUser(
+        decoded.email,
+        args.password
+      );
+
+      return {
+        success:
+          !deleteUser ||
+          deleteUser === null ||
+          deleteUser.emailInvalid ||
+          deleteUser.error
+            ? false
+            : true,
+        message: deleteUser.emailInvalid
+          ? "422 error, not a valid email address"
+          : deleteUser.error
+          ? `500 error, details ${deleteUser.error.detail}`
+          : `Delete user success!`,
+        user: deleteUser,
+      };
+    },
   },
 };

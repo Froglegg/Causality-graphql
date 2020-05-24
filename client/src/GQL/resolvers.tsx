@@ -1,6 +1,6 @@
 import { ApolloCache } from "apollo-cache";
 import { Resolvers } from "apollo-client";
-import * as userService from "../Services/userService";
+import * as userService from "./Services/userService";
 
 type ResolverFn = (
   parent: any,

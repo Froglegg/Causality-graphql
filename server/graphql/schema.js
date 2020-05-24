@@ -24,11 +24,13 @@ const TYPEDEFS = gql`
     userName: String
     hobby: String
   }
+
   type Query {
     allUsers: [User]
     findUser: User
     findMe: User
   }
+
   type Mutation {
     createUser(userInput: UserInput!): UserAPIResponse!
     login(loginInput: UserInput!): UserAPIResponse!
@@ -37,7 +39,9 @@ const TYPEDEFS = gql`
       email: String!
       updateUserInput: updateUserInput
     ): UserAPIResponse!
+    deleteUser(password: String!): UserAPIResponse
   }
+
   type UserAPIResponse {
     success: Boolean!
     message: String

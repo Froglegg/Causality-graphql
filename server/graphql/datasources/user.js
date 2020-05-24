@@ -127,6 +127,46 @@ class UserAPI extends DataSource {
   async logout(decodedToken) {
     return decodedToken;
   }
+
+  async deleteUser(email, password) {
+    try {
+      let user = await this.findUser(email);
+      if (user.emailInvalid) {
+        return {
+          status: 422,
+          error: "Email invalid! Please enter a proper email address.",
+        };
+      }
+      if (!user[0]) {
+        return { status: 401, error: "Invalid login credentials" };
+      }
+      const isPasswordMatch = await bcrypt.compare(password, user[0].password);
+      if (!isPasswordMatch) {
+        return { status: 401, error: "Invalid login credentials" };
+      }
+
+      const deleteUser = await this.store("users")
+        .where({ email: email })
+        .del()
+        .returning("*")
+        .then((res) => {
+          return res[0] ? res[0] : null;
+        })
+        .catch((err) => {
+          console.log(err);
+          return { error: err };
+        });
+
+      return deleteUser ? deleteUser : false;
+    } catch (err) {
+      console.log("delete user catch");
+      console.error(err.name + ": " + err.message);
+      return {
+        status: 500,
+        error: err,
+      };
+    }
+  }
 }
 
 module.exports = UserAPI;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as userService from "../Services/userService";
+import * as userService from "../GQL/Services/userService";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 import Button from "@material-ui/core/Button";
 
@@ -18,18 +18,20 @@ function Dashboard(props: any) {
   }
 
   return (
-    <div>
+    <>
       <h1>Dashboard</h1>
 
       <br />
       {data ? (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setInfo(data.findMe.userName)}
-        >
-          What's my name?
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setInfo(data.findMe.userName)}
+          >
+            What's my name?
+          </Button>
+        </div>
       ) : null}
 
       {!loading && !error ? (
@@ -43,7 +45,7 @@ function Dashboard(props: any) {
       ) : (
         ""
       )}
-    </div>
+    </>
   );
 }
 
