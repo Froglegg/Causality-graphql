@@ -4,7 +4,7 @@ export const typeDefs = gql`
   extend type Query {
     isLoggedIn: Boolean!
     getMyInfo: User
-    journalItems: [JournalItem]
+    journals: [Journal]
   }
   extend type Mutation {
     createUser(userInput: UserInput!): UserAPIResponse!
@@ -35,7 +35,7 @@ export const typeDefs = gql`
     hobby: String
   }
 
-  input updateUserInput {
+  input UpdateUserInput {
     userName: String
     hobby: String
   }

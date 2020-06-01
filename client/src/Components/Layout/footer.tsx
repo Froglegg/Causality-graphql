@@ -2,8 +2,8 @@ import React from "react";
 import styled from "@emotion/styled";
 
 import MenuItem from "./menu-item";
-import LogoutButton from "./logoutButton";
-import { colors, unit } from "../styles";
+import LogoutButton from "../logoutButton";
+import { colors, unit } from "../../styles";
 
 export default function Footer() {
   return (

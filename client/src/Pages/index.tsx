@@ -1,18 +1,30 @@
 import React, { Fragment } from "react";
 import { Router } from "@reach/router";
+import { useApolloClient, useQuery } from "@apollo/react-hooks";
 
-import Dashboard from "./Dashboard";
-import ViewProfile from "./ViewProfile";
-import Journals from "./Journals";
+import Dashboard from "./Dashboard/Dashboard";
+import MyProfile from "./MyProfile/MyProfile";
+import Journals from "./Journals/Journals";
 import { Footer, PageContainer } from "../Components";
 
+import { GET_MY_INFO } from "../GQL/queries/users";
+
 export default function Pages() {
+  // const client = useApolloClient();
+
+  // const { data, loading, error } = useQuery(GET_MY_INFO);
+
+  // write user data directly to cache
+  // if (!loading && !error) {
+  //   client.writeData({ data: { myInfo: data.findMe } });
+  // }
+
   return (
     <>
       <PageContainer>
         <Router primary={false} component={Fragment}>
           <Dashboard path="/" />
-          <ViewProfile path="/profile" />
+          <MyProfile path="/profile" />
           <Journals path="/journals" />
         </Router>
       </PageContainer>

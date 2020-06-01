@@ -1,7 +1,7 @@
 import { ApolloCache } from "apollo-cache";
 import { Resolvers } from "apollo-client";
-import * as userService from "./Services/userService";
-
+import gql from "graphql-tag";
+import { GET_MY_INFO } from "./queries/users";
 type ResolverFn = (
   parent: any,
   args: any,
@@ -22,26 +22,13 @@ export const resolvers: AppResolvers = {
     getMyInfo: (parents, args, { cache }) => {
       console.log("running resolver, get my info");
       const queryResult = cache.readQuery({
-        query: userService.query.getMyInfo,
+        query: GET_MY_INFO,
       });
       if (queryResult) {
-        console.log(queryResult);
         return queryResult;
       }
       return false;
     },
   },
-  Mutation: {
-    login: (parent, args, { cache }) => {
-      console.log("runnin resolver, login");
-      const queryResult = cache.readQuery({
-        query: userService.mutation.login,
-      });
-      if (queryResult) {
-        console.log(queryResult);
-        return queryResult;
-      }
-      return false;
-    },
-  },
+  Mutation: {},
 };

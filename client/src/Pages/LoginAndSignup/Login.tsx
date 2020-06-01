@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import SignIn from "../Components/signin";
-import SignUp from "../Components/signUp";
+import SignIn from "./signin";
+import SignUp from "./signUp";
 
-import Snackbar from "../Components/Snackbar";
+import Snackbar from "../../Components/Snackbar";
 
-import * as userService from "../GQL/Services/userService";
+import { LOGIN, CREATE_USER } from "../../GQL/mutations/users";
+
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import ApolloClient from "apollo-client";
 
@@ -20,9 +21,8 @@ function Login() {
 
   const [login, { loading: loginLoading, error: loginError }] = useMutation<
     any
-  >(userService.mutation.login, {
+  >(LOGIN, {
     onCompleted({ login }) {
-      console.log(login);
       if (!login.success) {
         setSnackBar({ open: true, message: login.message });
       } else {
@@ -35,10 +35,17 @@ function Login() {
   const [
     createUser,
     { loading: newUserLoading, error: newUserError },
-  ] = useMutation<any>(userService.mutation.createUser, {
+  ] = useMutation<any>(CREATE_USER, {
     onCompleted({ createUser }) {
-      localStorage.setItem("token", createUser.user.token as string);
-      client.writeData({ data: { isLoggedIn: true } });
+      if (!createUser.success) {
+        setSnackBar({
+          open: true,
+          message: createUser.message,
+        });
+      } else {
+        localStorage.setItem("token", createUser.user.token as string);
+        client.writeData({ data: { isLoggedIn: true } });
+      }
     },
   });
 

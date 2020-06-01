@@ -62,7 +62,7 @@ export default function EditProfile(props: any) {
             props.updateUser({
               variables: {
                 email: props.userData.email,
-                updateUserInput: {
+                input: {
                   userName: userName,
                   hobby: hobby,
                 },

@@ -7,6 +7,7 @@ const store = require("../db/config");
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
 const UserAPI = require("./datasources/user");
+const JournalsAPI = require("./datasources/journals");
 const engine = require("./engine");
 
 const SERVER = new ApolloServer({
@@ -25,6 +26,7 @@ const SERVER = new ApolloServer({
   resolvers,
   dataSources: () => ({
     userAPI: new UserAPI(store),
+    JournalsAPI: new JournalsAPI(store),
   }),
 
   engine: {

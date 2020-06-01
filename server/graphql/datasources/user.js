@@ -56,7 +56,7 @@ class UserAPI extends DataSource {
 
   async findAllUsers() {
     const users = await this.store("users").select();
-    return users && users.length ? users : null;
+    return users && users.length ? users : false;
   }
 
   async findUser(email) {

@@ -5,19 +5,20 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import { spacing } from "@material-ui/system";
+import Snackbar from "../../Components/Snackbar";
 
-import FormDialog from "../Components/formDialog";
-import EditProfile from "../Components/editProfile";
+import FormDialog from "./formDialog";
+import EditProfile from "./editProfile";
 
-import * as userService from "../GQL/Services/userService";
+import { UPDATE_USER, DELETE_USER } from "../../GQL/mutations/users";
+import { GET_MY_INFO } from "../../GQL/queries/users";
 
 import { Redirect } from "@reach/router";
 
 import { useApolloClient, useMutation, useQuery } from "@apollo/react-hooks";
-import ApolloClient from "apollo-client";
 
-function ViewProfile(props: any) {
-  const client: ApolloClient<any> = useApolloClient();
+function MyProfile(props: any) {
+  const client = useApolloClient();
   const [userDetails, setUserDetails] = useState({
     userName: "",
     email: "",
@@ -25,24 +26,48 @@ function ViewProfile(props: any) {
   });
   const [showEdit, setShowEdit] = useState(false);
 
+  const [snackBar, setSnackBar] = useState({
+    open: false,
+    message: "",
+  });
+
   const [
     updateUser,
     { loading: updateLoading, error: updateError },
-  ] = useMutation<any>(userService.mutation.updateUser, {
+  ] = useMutation<any>(UPDATE_USER, {
     onCompleted({ updateUser }) {
-      const { userName, email, hobby } = updateUser.user;
+      if (!updateUser.success) {
+        setSnackBar({
+          open: true,
+          message: updateUser.message,
+        });
+      } else {
+        const { userName, email, hobby } = updateUser.user;
 
-      setUserDetails({
-        userName: userName,
-        email: email,
-        hobby: hobby,
-      });
-      setShowEdit(false);
+        setUserDetails({
+          userName: userName,
+          email: email,
+          hobby: hobby,
+        });
+
+        client.writeData({
+          data: {
+            findMe: {
+              __typename: "User",
+              userName: userName,
+              email: email,
+              hobby: hobby,
+            },
+          },
+        });
+
+        setShowEdit(false);
+      }
     },
   });
 
   const { data: userData, loading: getLoading, error: getError } = useQuery(
-    userService.query.getMyInfo
+    GET_MY_INFO
   );
 
   useEffect(() => {
@@ -58,11 +83,11 @@ function ViewProfile(props: any) {
   const [
     deleteUser,
     { loading: deleteLoading, error: deleteError },
-  ] = useMutation<any>(userService.mutation.deleteUser, {
+  ] = useMutation<any>(DELETE_USER, {
     onCompleted({ deleteUser }) {
       localStorage.clear();
       client.writeData({ data: { isLoggedIn: false } });
-      client.clearStore();
+      client.resetStore();
       window.location.reload(false);
     },
   });
@@ -132,8 +157,19 @@ function ViewProfile(props: any) {
           hide={showEdit ? true : false}
         />
       </div>
+      <Snackbar
+        open={snackBar.open}
+        message={snackBar.message}
+        handleClose={() => {
+          setSnackBar({
+            ...snackBar,
+            open: false,
+          });
+        }}
+        position={{ vertical: "top", horizontal: "center" }}
+      />
     </>
   );
 }
 
-export default ViewProfile;
+export default MyProfile;

@@ -11,7 +11,7 @@ import { resolvers } from "./GQL/resolvers";
 import { typeDefs } from "./GQL/typeDefs";
 import injectStyles from "./styles";
 
-import Login from "./Pages/Login";
+import Login from "./Pages/LoginAndSignup/Login";
 import Pages from "./Pages";
 
 const cache = new InMemoryCache();
@@ -39,13 +39,21 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   resolvers,
 });
 
-// write initial data to the cache / initialize @client cache store
+// write initial data to the cache / initialize @client cache store. For the parent component, all we need to know is whether the user is logged in or not.
 cache.writeData({
   data: {
     isLoggedIn: !!localStorage.getItem("token"),
-    getMyInfo: {},
-    journalItems: [],
   },
+});
+
+// when a user logs out, a function is fired to reset the store. This is the callback function that will reinitialize the store with the isLoggedIn data.
+client.onResetStore(() => {
+  cache.writeData({
+    data: {
+      isLoggedIn: !!localStorage.getItem("token"),
+    },
+  });
+  return Promise.resolve();
 });
 
 const IS_LOGGED_IN = gql`
@@ -56,7 +64,6 @@ const IS_LOGGED_IN = gql`
 
 function IsLoggedIn() {
   const { data } = useQuery(IS_LOGGED_IN);
-  console.log(data);
   return data.isLoggedIn ? <Pages /> : <Login />;
 }
 

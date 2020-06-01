@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { useApolloClient } from "@apollo/react-hooks";
 
-import { menuItemClassName } from "./menu-item";
+import { menuItemClassName } from "./Layout/menu-item";
 
 function LogoutButton() {
   const client = useApolloClient();
@@ -11,9 +11,10 @@ function LogoutButton() {
       onClick={() => {
         localStorage.clear();
         client.writeData({ data: { isLoggedIn: false } });
-        client.clearStore();
+        client.resetStore();
         window.location.reload(false);
       }}
+      style={{ cursor: "pointer" }}
     >
       Logout
     </StyledButton>

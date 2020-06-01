@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(helmet());
 app.use(cors(corsOptions));
-app.use(morgan("combined"));
+// app.use(morgan("combined"));
 
 // graphQL
 const SERVER = require("./graphql/index");

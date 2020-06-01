@@ -12,6 +12,14 @@ module.exports = {
       const user = await dataSources.userAPI.findUser(args);
       return user;
     },
+    isLoggedIn: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      const myAccount = await dataSources.userAPI.findUser(decoded.email);
+      if (myAccount[0]) {
+        return true;
+      }
+      return false;
+    },
     findMe: async (parent, args, { dataSources, req }) => {
       // protected API route
       // token is accessed via the request header... on the client, specify request header in HTTP Header field, pulling it from local storage etc.
@@ -20,6 +28,30 @@ module.exports = {
       const myAccount = await dataSources.userAPI.findUser(decoded.email);
 
       return myAccount[0];
+    },
+    readJournal: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const journal = await dataSources.JournalsAPI.readJournal(
+          args.journalId
+        );
+        return journal;
+      }
+    },
+    readAllJournals: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const journals = await dataSources.JournalsAPI.readAllJournals();
+        return journals;
+      }
+    },
+    readMyJournals: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      const userId = decoded.id;
+      if (decoded) {
+        const journals = await dataSources.JournalsAPI.readMyJournals(userId);
+        return journals;
+      }
     },
   },
   Mutation: {
@@ -36,7 +68,7 @@ module.exports = {
           : newUser.error && newUser.error.code == "23505"
           ? `409 error, ${args.userInput.email} already exists; please use a different email.`
           : newUser.error
-          ? `500 error, error inserting new user into database. Details: ${newUser.error.detail}`
+          ? `500 error, error inserting new user into database. Details: ${newUser.error}`
           : `Welcome, ${newUser.userName}!`,
 
         user: newUser,
@@ -89,7 +121,7 @@ module.exports = {
         message: userUpdate.emailInvalid
           ? `422 error, Not a valid email address`
           : userUpdate.error
-          ? `500 error, error updating user. Details: ${userUpdate.error.detail}`
+          ? `500 error, error updating user. Details: ${userUpdate.error}`
           : `Update successful, ${userUpdate.userName}!`,
 
         user: userUpdate,
@@ -113,10 +145,117 @@ module.exports = {
         message: deleteUser.emailInvalid
           ? "422 error, not a valid email address"
           : deleteUser.error
-          ? `500 error, details ${deleteUser.error.detail}`
+          ? `500 error, details ${deleteUser.error}`
           : `Delete user success!`,
         user: deleteUser,
       };
+    },
+    createJournal: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      const userId = decoded.id;
+      if (decoded) {
+        const createJournal = await dataSources.JournalsAPI.createJournal(
+          args.journalInput,
+          userId
+        );
+
+        return {
+          success:
+            !createJournal || createJournal === null || createJournal.error
+              ? false
+              : true,
+          message:
+            !createJournal || createJournal.error
+              ? `500 error, details ${createJournal.error}`
+              : "Success!",
+          journal: createJournal,
+        };
+      }
+    },
+    updateJournal: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const updateJournal = await dataSources.JournalsAPI.updateJournal(
+          args.updateJournalInput
+        );
+        return {
+          success:
+            !updateJournal || updateJournal === null || updateJournal.error
+              ? false
+              : true,
+          message:
+            !updateJournal || updateJournal.error
+              ? `500 error, details ${updateJournal.error}`
+              : "Success!",
+          journal: updateJournal,
+        };
+      }
+    },
+
+    updateJournalData: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const updateJournalData = await dataSources.JournalsAPI.updateJournalData(
+          args.updateJournalData
+        );
+        return {
+          success:
+            !updateJournalData ||
+            updateJournalData === null ||
+            updateJournalData.error
+              ? false
+              : true,
+          message:
+            !updateJournalData || updateJournalData.error
+              ? `500 error, details ${updateJournalData.error}`
+              : "Success!",
+          journal: updateJournalData,
+        };
+      }
+    },
+
+    updateCausality: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const updateCausality = await dataSources.JournalsAPI.updateCausality(
+          args.updateCausality
+        );
+        return {
+          success:
+            !updateCausality ||
+            updateCausality === null ||
+            updateCausality.error
+              ? false
+              : true,
+          message:
+            !updateCausality || updateCausality.error
+              ? `500 error, details ${updateCausality.error}`
+              : "Success!",
+          causality: updateCausality,
+        };
+      }
+    },
+
+    deleteJournal: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const deleteJournal = await dataSources.JournalsAPI.deleteJournal(
+          args.id
+        );
+        return {
+          success:
+            !deleteJournal || deleteJournal === null || deleteJournal.error
+              ? false
+              : true,
+          message:
+            !deleteJournal || deleteJournal.error
+              ? `500 error, details ${deleteJournal.error}`
+              : "Success!",
+          journal: deleteJournal,
+        };
+      }
     },
   },
 };

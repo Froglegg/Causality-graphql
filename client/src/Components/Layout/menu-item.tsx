@@ -3,7 +3,7 @@ import { css } from "@emotion/core";
 
 import { Link } from "@reach/router";
 
-import { colors, unit } from "../styles";
+import { colors, unit } from "../../styles";
 
 export const menuItemClassName = css({
   flexGrow: 1,
