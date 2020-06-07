@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      maxWidth: 360,
+      maxWidth: 600,
       backgroundColor: theme.palette.background.paper,
     },
     nested: {

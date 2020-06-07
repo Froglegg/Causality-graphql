@@ -1,6 +1,6 @@
 import React from "react";
 
-function CreateJournal() {
+function CreateJournal(props: any) {
   return <div></div>;
 }
 

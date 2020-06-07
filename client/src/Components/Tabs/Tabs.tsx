@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
+import AddIcon from "@material-ui/icons/Add";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,7 +56,12 @@ export default function SimpleTabs(props: any) {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="tabination">
           {props.children.map((child: any, idx: number) => (
-            <Tab label={child.props.label} {...a11yProps(idx)} key={idx} />
+            <Tab
+              label={child.props.label}
+              {...a11yProps(idx)}
+              key={idx}
+              icon={child.props.icon ? child.props.icon : null}
+            />
           ))}
         </Tabs>
       </AppBar>
