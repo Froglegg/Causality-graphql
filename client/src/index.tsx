@@ -7,7 +7,7 @@ import { setContext } from "apollo-link-context";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { resolvers } from "./GQL/resolvers";
+import { resolvers } from "./GQL/@client_resolvers";
 import { typeDefs } from "./GQL/typeDefs";
 import injectStyles from "./styles";
 

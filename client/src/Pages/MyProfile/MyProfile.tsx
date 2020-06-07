@@ -11,7 +11,7 @@ import FormDialog from "./formDialog";
 import EditProfile from "./editProfile";
 
 import { UPDATE_USER, DELETE_USER } from "../../GQL/mutations/users";
-import { GET_MY_INFO } from "../../GQL/queries/users";
+import { GET_USER_INFO } from "../../GQL/queries/users";
 
 import { Redirect } from "@reach/router";
 
@@ -67,7 +67,7 @@ function MyProfile(props: any) {
   });
 
   const { data: userData, loading: getLoading, error: getError } = useQuery(
-    GET_MY_INFO
+    GET_USER_INFO
   );
 
   useEffect(() => {

@@ -3,8 +3,11 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   extend type Query {
     isLoggedIn: Boolean!
-    getMyInfo: User
-    journals: [Journal]
+    findMe: User
+    findUserById(id: String): User
+    readJournal(id: String): Journal
+    readAllJournals: [Journal]
+    readMyJournals: [Journal]
   }
   extend type Mutation {
     createUser(userInput: UserInput!): UserAPIResponse!
@@ -15,6 +18,11 @@ export const typeDefs = gql`
       updateUserInput: updateUserInput
     ): UserAPIResponse
     deleteUser(password: String!): UserAPIResponse
+    createJournal(journalInput: JournalInput): JournalAPIResponse
+    updateJournal(updateJournalInput: UpdateJournalInput): JournalAPIResponse
+    updateJournalData(updateJournalData: UpdateJournalData): JournalAPIResponse
+    updateCausality(updateCausality: UpdateCausality): CausalityResponse
+    deleteJournal(id: String): JournalAPIResponse
   }
   type User {
     id: ID
@@ -50,19 +58,58 @@ export const typeDefs = gql`
 
   type Journal {
     id: ID
-    userID: ID
-    name: String
-    userName: String
+    user: ID
+    journalName: String
     condition: String
-    data: [JournalEntry]
+    notes: String
+    public: Boolean
+    data: [JournalData]
     causality: String
     created_at: String
   }
-  type JournalEntry {
-    condition: Boolean!
-    events: [Event]
+
+  type JournalData {
+    events: [String]
+    condition: Boolean
   }
-  type Event {
-    event: String
+
+  input JournalInput {
+    journalName: String
+    condition: String
+    notes: String
+    public: Boolean
+  }
+
+  input UpdateJournalInput {
+    id: String
+    journal: JournalInput
+  }
+
+  input UpdateJournalData {
+    id: String
+    data: [JournalDataInput]
+  }
+
+  input JournalDataInput {
+    events: [String]
+    condition: Boolean
+  }
+
+  input UpdateCausality {
+    id: String
+    causality: Float
+  }
+
+  type JournalAPIResponse {
+    success: Boolean!
+    message: String
+    journal: Journal
+    journals: [Journal]
+  }
+
+  type CausalityResponse {
+    success: Boolean!
+    message: String
+    causality: Float
   }
 `;

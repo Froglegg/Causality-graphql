@@ -44,7 +44,6 @@ class JournalsAPI extends DataSource {
       .catch((err) => {
         return { error: err };
       });
-
     return readJournal ? readJournal : false;
   };
 

@@ -1,7 +1,7 @@
 import { ApolloCache } from "apollo-cache";
 import { Resolvers } from "apollo-client";
 import gql from "graphql-tag";
-import { GET_MY_INFO } from "./queries/users";
+import { GET_USER_INFO } from "./queries/users";
 type ResolverFn = (
   parent: any,
   args: any,
@@ -19,10 +19,10 @@ interface AppResolvers extends Resolvers {
 
 export const resolvers: AppResolvers = {
   Query: {
-    getMyInfo: (parents, args, { cache }) => {
+    findMe: (parents, args, { cache }) => {
       console.log("running resolver, get my info");
       const queryResult = cache.readQuery({
-        query: GET_MY_INFO,
+        query: GET_USER_INFO,
       });
       if (queryResult) {
         return queryResult;

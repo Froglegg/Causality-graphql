@@ -1,8 +1,9 @@
 import gql from "graphql-tag";
 
-const GET_MY_INFO = gql`
-  query GetMyInfo {
+const GET_USER_INFO = gql`
+  query findMe {
     findMe {
+      id
       userName
       email
       hobby
@@ -10,4 +11,13 @@ const GET_MY_INFO = gql`
   }
 `;
 
-export { GET_MY_INFO };
+const FIND_USER = gql`
+  query($id: String) {
+    findUserById(id: $id) {
+      id
+      userName
+      hobby
+    }
+  }
+`;
+export { GET_USER_INFO };

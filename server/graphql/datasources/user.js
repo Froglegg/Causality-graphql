@@ -70,6 +70,12 @@ class UserAPI extends DataSource {
     return user ? user : false;
   }
 
+  async findUserById(id) {
+    const user = await this.store("users").where({ id: id });
+
+    return user[0] ? user[0] : false;
+  }
+
   async putUser(email, updateUserInput) {
     const userUpdate = await this.store("users")
       .where({ email: email })

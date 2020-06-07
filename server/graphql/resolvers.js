@@ -12,6 +12,12 @@ module.exports = {
       const user = await dataSources.userAPI.findUser(args);
       return user;
     },
+    findUserById: async (parent, args, { dataSources, req }) => {
+      console.log(args);
+      const user = await dataSources.userAPI.findUserById(args.id);
+      console.log(user);
+      return user;
+    },
     isLoggedIn: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       const myAccount = await dataSources.userAPI.findUser(decoded.email);
@@ -32,9 +38,7 @@ module.exports = {
     readJournal: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       if (decoded) {
-        const journal = await dataSources.JournalsAPI.readJournal(
-          args.journalId
-        );
+        const journal = await dataSources.JournalsAPI.readJournal(args.id);
         return journal;
       }
     },

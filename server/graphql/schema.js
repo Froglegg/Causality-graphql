@@ -28,6 +28,7 @@ const TYPEDEFS = gql`
   type Query {
     allUsers: [User]
     findUser: User
+    findUserById(id: String): User
     isLoggedIn: Boolean
     findMe: User
     readJournal(id: String): Journal
