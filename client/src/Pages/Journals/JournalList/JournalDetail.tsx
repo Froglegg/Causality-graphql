@@ -1,6 +1,6 @@
 import React from "react";
 
-import { READ_JOURNAL } from "../../GQL/queries/journals";
+import { READ_JOURNAL } from "../../../GQL/queries/journals";
 
 import { useQuery } from "@apollo/react-hooks";
 

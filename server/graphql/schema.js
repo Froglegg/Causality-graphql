@@ -50,6 +50,10 @@ const TYPEDEFS = gql`
     updateJournalData(updateJournalData: UpdateJournalData): JournalAPIResponse
     updateCausality(updateCausality: UpdateCausality): CausalityResponse
     deleteJournal(id: String): JournalAPIResponse
+    updateJournalEvents(
+      id: String
+      eventDataInput: EventDataInput
+    ): JournalAPIResponse
   }
 
   type UserAPIResponse {
@@ -68,25 +72,26 @@ const TYPEDEFS = gql`
     notes: String
     public: Boolean
     data: [JournalData]
+    events: [Event]
     causality: String
     created_at: String
   }
 
-  type JournalData {
-    events: [String]
-    condition: Boolean
-  }
-
   input JournalInput {
-    journalName: String
-    condition: String
+    journalName: String!
+    condition: String!
     notes: String
-    public: Boolean
+    public: Boolean!
   }
 
   input UpdateJournalInput {
     id: String
     journal: JournalInput
+  }
+
+  type JournalData {
+    events: [String]
+    condition: Boolean
   }
 
   input UpdateJournalData {
@@ -115,6 +120,24 @@ const TYPEDEFS = gql`
     success: Boolean!
     message: String
     causality: Float
+  }
+
+  type Event {
+    event: String
+    positive: Int
+    negative: Int
+    causality: Float
+  }
+
+  input UpdateJournalEvents {
+    id: String
+    data: [EventDataInput]
+  }
+
+  input EventDataInput {
+    event: String
+    positive: Int
+    negative: Int
   }
 `;
 

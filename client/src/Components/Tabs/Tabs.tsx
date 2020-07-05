@@ -55,14 +55,16 @@ export default function SimpleTabs(props: any) {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="tabination">
-          {props.children.map((child: any, idx: number) => (
-            <Tab
-              label={child.props.label}
-              {...a11yProps(idx)}
-              key={idx}
-              icon={child.props.icon ? child.props.icon : null}
-            />
-          ))}
+          {props.children && props.children.length
+            ? props.children.map((child: any, idx: number) => (
+                <Tab
+                  label={child.props.label}
+                  {...a11yProps(idx)}
+                  key={idx}
+                  icon={child.props.icon ? child.props.icon : null}
+                />
+              ))
+            : null}
         </Tabs>
       </AppBar>
       {props.children.map((child: any, idx: number) => (

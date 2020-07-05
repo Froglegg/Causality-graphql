@@ -13,9 +13,7 @@ module.exports = {
       return user;
     },
     findUserById: async (parent, args, { dataSources, req }) => {
-      console.log(args);
       const user = await dataSources.userAPI.findUserById(args.id);
-      console.log(user);
       return user;
     },
     isLoggedIn: async (parent, args, { dataSources, req }) => {
@@ -162,7 +160,6 @@ module.exports = {
           args.journalInput,
           userId
         );
-
         return {
           success:
             !createJournal || createJournal === null || createJournal.error
@@ -258,6 +255,29 @@ module.exports = {
               ? `500 error, details ${deleteJournal.error}`
               : "Success!",
           journal: deleteJournal,
+        };
+      }
+    },
+
+    updateJournalEvents: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const updatedEvents = await dataSources.JournalsAPI.updateEvents(
+          args.id,
+          args.eventDataInput
+        );
+
+        return {
+          success:
+            !updatedEvents || updatedEvents === null || updatedEvents.error
+              ? false
+              : true,
+          message:
+            !updatedEvents || updatedEvents.error
+              ? `500 error, details ${updatedEvents.error}`
+              : "Success!",
+          journal: updatedEvents,
         };
       }
     },

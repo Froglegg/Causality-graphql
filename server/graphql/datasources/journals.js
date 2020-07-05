@@ -92,7 +92,6 @@ class JournalsAPI extends DataSource {
       .update({ data: JSON.stringify(putData.data) })
       .returning("*")
       .then((res) => {
-        console.log(res);
         return res[0] ? res[0] : null;
       })
       .catch((err) => {
@@ -129,6 +128,25 @@ class JournalsAPI extends DataSource {
       });
 
     return deleteJournal ? deleteJournal : false;
+  };
+
+  updateEvents = async (journalId, events) => {
+    const updateEvents = await this.store("journals")
+      .where({ id: journalId })
+      .update({
+        events: events,
+      })
+      .returning("*")
+      .then((res) => {
+        console.log(res);
+        return res[0] ? res[0] : null;
+      })
+      .catch((err) => {
+        console.log(err);
+        return { error: err };
+      });
+
+    return updateEvents ? updateEvents : false;
   };
 }
 

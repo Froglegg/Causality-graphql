@@ -90,4 +90,4 @@ const UPDATE_CAUSALITY = gql`
   }
 `;
 
-export {};
+export { CREATE_JOURNAL };

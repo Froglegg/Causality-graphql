@@ -11,6 +11,9 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import LocalLibraryRoundedIcon from "@material-ui/icons/LocalLibraryRounded";
 
+import JournalDetail from "./JournalDetail";
+import JournalTable from "../Table/JournalTable";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -29,18 +32,51 @@ function ListItemLink(props: ListItemProps<"a", { button?: true }>) {
 }
 
 export default function JournalList(props: any) {
+  interface journalProvider {
+    id: string;
+    journalName: string;
+    data: [
+      {
+        events: [string];
+        condition: boolean;
+      }
+    ];
+    condition: string;
+    causality: string;
+    notes: string;
+    created_at: string;
+  }
+
   const [open, setOpen] = React.useState(() => {
     let obj: any = {};
-    props.items.forEach((item: any) => {
+    props.items.forEach((item: journalProvider) => {
       return (obj[item.id] = false);
     });
     return obj;
   });
 
+  interface DetailProvider {
+    [id: string]: {
+      open: boolean;
+    };
+  }
+
+  const [detail, setDetail] = React.useState<DetailProvider>({});
+
   const handleClick = (id: string) => {
     setOpen({
       ...open,
       [id]: !open[id],
+    });
+  };
+
+  const handleDetail = (id: string) => {
+    let bool = detail[id] && detail[id].open ? false : true;
+    setDetail({
+      ...detail,
+      [id]: {
+        open: bool,
+      },
     });
   };
 
@@ -50,7 +86,7 @@ export default function JournalList(props: any) {
     <div className={classes.root}>
       <List component="nav" aria-label="main mailbox folders">
         {props.items && props.items.length
-          ? props.items.map((item: any, idx: number) => (
+          ? props.items.map((item: journalProvider, idx: number) => (
               <React.Fragment key={item.id}>
                 <ListItem
                   button
@@ -67,12 +103,18 @@ export default function JournalList(props: any) {
                 </ListItem>
                 <Collapse in={open[item.id]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    <ListItem button className={classes.nested}>
+                    <ListItem
+                      button
+                      className={classes.nested}
+                      onClick={() => {
+                        handleDetail(item.id);
+                      }}
+                    >
                       <ListItemIcon>
                         <LocalLibraryRoundedIcon style={{ color: "#4051B5" }} />
                       </ListItemIcon>
                       <ListItemText
-                        primary={item.condition}
+                        primary={"Condition: " + item.condition}
                         secondary={
                           item.data && item.data.length === 1
                             ? `1 entry, causality score: ${item.causality}`
@@ -82,6 +124,20 @@ export default function JournalList(props: any) {
                         }
                       />
                     </ListItem>
+                    <Collapse
+                      in={
+                        detail[item.id] && detail[item.id].open
+                          ? detail[item.id].open
+                          : false
+                      }
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <h4>Notes</h4>
+                      {item.notes}
+                      <br /> <br />
+                      <JournalTable />
+                    </Collapse>
                   </List>
                 </Collapse>
               </React.Fragment>
