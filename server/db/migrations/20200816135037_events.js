@@ -3,6 +3,8 @@ exports.up = function (knex) {
     table.increments("id");
     table.integer("journal");
     table.foreign("journal").references("journals.id");
+    table.integer("user");
+    table.foreign("user").references("users.id");
     table.string("event", 255);
     table.float("causality");
     table.integer("positives");

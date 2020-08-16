@@ -121,9 +121,11 @@ const TYPEDEFS = gql`
 
   input EventDataInput {
     journal: ID
+    user: ID
     event: String
-    positive: Int
-    negative: Int
+    positives: Int
+    negatives: Int
+    notes: String
   }
 
   type JournalAPIResponse {
@@ -142,10 +144,12 @@ const TYPEDEFS = gql`
   type Event {
     id: ID
     journal: ID
+    user: ID
     event: String
-    positive: Int
-    negative: Int
+    positives: Int
+    negatives: Int
     causality: Float
+    notes: String
   }
 
   type EventsAPIResponse {
@@ -156,16 +160,22 @@ const TYPEDEFS = gql`
   }
 
   input EventInput {
+    user: ID
     journal: ID
     event: String
-    positive: Int
-    negative: Int
+    positives: Int
+    negatives: Int
+    notes: String
   }
 
   input UpdateEventInput {
     id: ID
-    positive: Int
-    negative: Int
+    user: ID
+    journal: ID
+    positives: Int
+    negatives: Int
+    causality: Float
+    notes: String
   }
 `;
 

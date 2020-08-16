@@ -28,7 +28,7 @@ const SERVER = new ApolloServer({
   dataSources: () => ({
     userAPI: new UserAPI(store),
     JournalsAPI: new JournalsAPI(store),
-    EventsApi: new EventsAPI(store),
+    EventsAPI: new EventsAPI(store),
   }),
 
   engine: {

@@ -65,7 +65,9 @@ module.exports = {
     readAllEvents: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       if (decoded) {
-        const events = await dataSources.EventsAPI.readAllEvents();
+        const events = await dataSources.EventsAPI.readAllEvents(
+          args.journalId
+        );
         return events;
       }
     },
@@ -300,8 +302,7 @@ module.exports = {
       const decoded = decodedToken(req);
       if (decoded) {
         const createEvent = await dataSources.EventsAPI.createEvent(
-          args.eventInput,
-          args.journalId
+          args.eventInput
         );
         return {
           success:
@@ -318,6 +319,7 @@ module.exports = {
     },
     updateEvent: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
+      console.log(args);
 
       if (decoded) {
         const updateEvent = await dataSources.EventsAPI.updateEvent(

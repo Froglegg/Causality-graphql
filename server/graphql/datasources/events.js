@@ -53,6 +53,7 @@ class EventsAPI extends DataSource {
         return res && res.length ? res : null;
       })
       .catch((err) => {
+        console.log(err);
         return { error: err };
       });
 
@@ -60,14 +61,16 @@ class EventsAPI extends DataSource {
   };
 
   updateEvent = async (putData) => {
+    console.log(putData.id);
     const updateEvent = await this.store("events")
       .where({ id: putData.id })
-      .update(putData.event)
+      .update(putData)
       .returning("*")
       .then((res) => {
         return res[0] ? res[0] : null;
       })
       .catch((err) => {
+        console.log(err);
         return { error: err };
       });
     return updateEvent ? updateEvent : false;
