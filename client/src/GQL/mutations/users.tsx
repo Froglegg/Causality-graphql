@@ -40,6 +40,7 @@ const UPDATE_USER = gql`
       token
       user {
         userName
+        id
         email
         hobby
       }

@@ -1,7 +1,6 @@
 const exampleJournal = require("../data/exampleJournal");
 const exampleJournal2 = require("../data/exampleJournal2");
 exports.seed = function (knex) {
-  console.log(exampleJournal);
   // Deletes ALL existing entries
   return knex("journals")
     .del()

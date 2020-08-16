@@ -34,6 +34,8 @@ const TYPEDEFS = gql`
     readJournal(id: String): Journal
     readAllJournals: [Journal]
     readMyJournals: [Journal]
+    readEvent(id: String): Event
+    readAllEvents(journalId: String): [Event]
   }
 
   type Mutation {
@@ -54,6 +56,9 @@ const TYPEDEFS = gql`
       id: String
       eventDataInput: EventDataInput
     ): JournalAPIResponse
+    createEvent(eventInput: EventInput): EventsAPIResponse
+    updateEvent(updateEventInput: UpdateEventInput): EventsAPIResponse
+    deleteEvent(id: String): EventsAPIResponse
   }
 
   type UserAPIResponse {
@@ -73,7 +78,7 @@ const TYPEDEFS = gql`
     public: Boolean
     data: [JournalData]
     events: [Event]
-    causality: String
+    causality: Float
     created_at: String
   }
 
@@ -104,9 +109,21 @@ const TYPEDEFS = gql`
     condition: Boolean
   }
 
+  input UpdateJournalEvents {
+    id: String
+    data: [EventDataInput]
+  }
+
   input UpdateCausality {
     id: String
     causality: Float
+  }
+
+  input EventDataInput {
+    journal: ID
+    event: String
+    positive: Int
+    negative: Int
   }
 
   type JournalAPIResponse {
@@ -123,19 +140,30 @@ const TYPEDEFS = gql`
   }
 
   type Event {
+    id: ID
+    journal: ID
     event: String
     positive: Int
     negative: Int
     causality: Float
   }
 
-  input UpdateJournalEvents {
-    id: String
-    data: [EventDataInput]
+  type EventsAPIResponse {
+    success: Boolean!
+    message: String
+    event: Event
+    events: [Event]
   }
 
-  input EventDataInput {
+  input EventInput {
+    journal: ID
     event: String
+    positive: Int
+    negative: Int
+  }
+
+  input UpdateEventInput {
+    id: ID
     positive: Int
     negative: Int
   }

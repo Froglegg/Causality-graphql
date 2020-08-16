@@ -9,7 +9,7 @@ exports.up = function (knex) {
     table.boolean("public");
     table.json("data");
     table.json("events");
-    table.string("causality");
+    table.float("causality");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
 };

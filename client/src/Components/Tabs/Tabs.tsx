@@ -50,7 +50,6 @@ export default function SimpleTabs(props: any) {
     setValue(newValue);
   };
 
-  console.log(props.children);
   return (
     <div className={classes.root}>
       <AppBar position="static">

@@ -55,6 +55,20 @@ module.exports = {
         return journals;
       }
     },
+    readEvent: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const event = await dataSources.EventsAPI.readEvent(args.id);
+        return event;
+      }
+    },
+    readAllEvents: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const events = await dataSources.EventsAPI.readAllEvents();
+        return events;
+      }
+    },
   },
   Mutation: {
     createUser: async (parent, args, { dataSources, req }) => {
@@ -278,6 +292,66 @@ module.exports = {
               ? `500 error, details ${updatedEvents.error}`
               : "Success!",
           journal: updatedEvents,
+        };
+      }
+    },
+
+    createEvent: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const createEvent = await dataSources.EventsAPI.createEvent(
+          args.eventInput,
+          args.journalId
+        );
+        return {
+          success:
+            !createEvent || createEvent === null || createEvent.error
+              ? false
+              : true,
+          message:
+            !createEvent || createEvent.error
+              ? `500 error, details ${createEvent.error}`
+              : "Success!",
+          event: createEvent,
+        };
+      }
+    },
+    updateEvent: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const updateEvent = await dataSources.EventsAPI.updateEvent(
+          args.updateEventInput
+        );
+        return {
+          success:
+            !updateEvent || updateEvent === null || updateEvent.error
+              ? false
+              : true,
+          message:
+            !updateEvent || updateEvent.error
+              ? `500 error, details ${updateEvent.error}`
+              : "Success!",
+          event: updateEvent,
+        };
+      }
+    },
+
+    deleteEvent: async (parent, args, { dataSources, req }) => {
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const deleteEvent = await dataSources.EventsAPI.deleteEvent(args.id);
+        return {
+          success:
+            !deleteEvent || deleteEvent === null || deleteEvent.error
+              ? false
+              : true,
+          message:
+            !deleteEvent || deleteEvent.error
+              ? `500 error, details ${deleteEvent.error}`
+              : "Success!",
+          event: deleteEvent,
         };
       }
     },

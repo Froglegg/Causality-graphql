@@ -121,7 +121,6 @@ class UserAPI extends DataSource {
         token: token,
       };
     } catch (err) {
-      console.log("LOGIN CATCH");
       console.error(err.name + ": " + err.message);
       return {
         status: 500,
@@ -165,7 +164,6 @@ class UserAPI extends DataSource {
 
       return deleteUser ? deleteUser : false;
     } catch (err) {
-      console.log("delete user catch");
       console.error(err.name + ": " + err.message);
       return {
         status: 500,

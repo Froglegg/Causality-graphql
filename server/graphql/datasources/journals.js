@@ -138,7 +138,6 @@ class JournalsAPI extends DataSource {
       })
       .returning("*")
       .then((res) => {
-        console.log(res);
         return res[0] ? res[0] : null;
       })
       .catch((err) => {

@@ -42,7 +42,7 @@ function MyProfile(props: any) {
           message: updateUser.message,
         });
       } else {
-        const { userName, email, hobby } = updateUser.user;
+        const { userName, email, hobby, id } = updateUser.user;
 
         setUserDetails({
           userName: userName,
@@ -54,6 +54,7 @@ function MyProfile(props: any) {
           data: {
             findMe: {
               __typename: "User",
+              id: id,
               userName: userName,
               email: email,
               hobby: hobby,

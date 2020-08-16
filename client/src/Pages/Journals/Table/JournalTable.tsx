@@ -52,8 +52,8 @@ export default function JournalTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.event}>
+          {rows.map((row, idx) => (
+            <TableRow key={`${idx} - ${row.event}`}>
               <TableCell component="th" scope="row">
                 {row.event}
               </TableCell>
