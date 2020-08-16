@@ -11,8 +11,8 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import LocalLibraryRoundedIcon from "@material-ui/icons/LocalLibraryRounded";
 
-import JournalDetail from "./JournalDetail";
-import JournalTable from "../Table/JournalTable";
+import JournalDetail from "./JournalDetail/JournalDetail";
+import JournalTable from "./JournalDetail/JournalTable";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,7 +136,7 @@ export default function JournalList(props: any) {
                       <h4>Notes</h4>
                       {item.notes}
                       <br /> <br />
-                      <JournalTable />
+                      <JournalDetail journal={item} />
                     </Collapse>
                   </List>
                 </Collapse>
