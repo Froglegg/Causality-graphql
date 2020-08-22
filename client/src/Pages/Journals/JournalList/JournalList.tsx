@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
+import { useMutation } from "@apollo/react-hooks";
 
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
-import Collapse from "@material-ui/core/Collapse";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import {
+  createStyles,
+  Theme,
+  makeStyles,
+  Button,
+  ListItemText,
+  ListItemIcon,
+  Collapse,
+  ListItem,
+  List,
+} from "@material-ui/core";
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import LocalLibraryRoundedIcon from "@material-ui/icons/LocalLibraryRounded";
 
 import JournalDetail from "./JournalDetail/JournalDetail";
-import JournalTable from "./JournalDetail/JournalTable";
+
+import { DELETE_JOURNAL } from "../../../GQL/mutations/journals";
+import { causality } from "../../../utils/causality";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-function ListItemLink(props: ListItemProps<"a", { button?: true }>) {
-  return <ListItem button component="a" {...props} />;
-}
 
 export default function JournalList(props: any) {
   interface journalProvider {
@@ -80,6 +83,17 @@ export default function JournalList(props: any) {
     });
   };
 
+  const [
+    deleteJournal,
+    { loading: deleteJournalLoading, error: deleteJournalError },
+  ] = useMutation<any>(DELETE_JOURNAL, {
+    onCompleted({ deleteJournal }) {
+      if (!deleteJournal.success) {
+      } else {
+      }
+    },
+  });
+
   const classes = useStyles();
 
   return (
@@ -117,9 +131,9 @@ export default function JournalList(props: any) {
                         primary={"Condition: " + item.condition}
                         secondary={
                           item.data && item.data.length === 1
-                            ? `1 entry, causality score: ${item.causality}`
+                            ? `1 entry`
                             : item.data && item.data.length > 1
-                            ? `${item.data.length} entries, causality score: ${item.causality}`
+                            ? `${item.data.length} entries`
                             : `no entries`
                         }
                       />
@@ -133,9 +147,26 @@ export default function JournalList(props: any) {
                       timeout="auto"
                       unmountOnExit
                     >
+                      <hr />
                       <h4>Notes</h4>
-                      {item.notes}
-                      <br /> <br />
+                      <p style={{ whiteSpace: "pre-wrap" }}>{item.notes}</p>
+                      <h4 style={{ marginTop: 10 }}>Causality</h4>
+                      <p style={{ whiteSpace: "pre-wrap" }}>
+                        {item.data && item.data.length
+                          ? causality(item.data, item.condition)
+                          : "No data to analyze yet. Add some entries to determine the cause of the condition."}
+                      </p>
+                      <br />
+                      <Button
+                        style={{ float: "right" }}
+                        color={"secondary"}
+                        onClick={() => {
+                          deleteJournal({ variables: { input: item.id } });
+                        }}
+                      >
+                        Delete Journal
+                      </Button>
+                      <br />
                       <JournalDetail journal={item} />
                     </Collapse>
                   </List>

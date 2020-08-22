@@ -28,6 +28,7 @@
     "graphql": "14.2.0",
     "graphql-tag": "^2.10.3",
     "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",

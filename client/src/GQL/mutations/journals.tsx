@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 const CREATE_JOURNAL = gql`
-  mutation($input: JournalInput) {
+  mutation createJournal($input: JournalInput) {
     createJournal(journalInput: $input) {
       success
       message
@@ -14,6 +14,8 @@ const CREATE_JOURNAL = gql`
         data {
           events
           condition
+          notes
+          timeStamp
         }
       }
     }
@@ -21,7 +23,7 @@ const CREATE_JOURNAL = gql`
 `;
 
 const UPDATE_JOURNAL = gql`
-  mutation($input: UpdateJournalInput) {
+  mutation updateJournal($input: UpdateJournalInput) {
     updateJournal(updateJournalInput: $input) {
       success
       message
@@ -34,6 +36,8 @@ const UPDATE_JOURNAL = gql`
         data {
           events
           condition
+          notes
+          timeStamp
         }
       }
     }
@@ -41,7 +45,7 @@ const UPDATE_JOURNAL = gql`
 `;
 
 const UPDATE_JOURNAL_DATA = gql`
-  mutation($input: UpdateJournalData) {
+  mutation updateJournalData($input: UpdateJournalData) {
     updateJournalData(updateJournalData: $input) {
       success
       message
@@ -54,6 +58,8 @@ const UPDATE_JOURNAL_DATA = gql`
         data {
           events
           condition
+          notes
+          timeStamp
         }
       }
     }
@@ -61,7 +67,7 @@ const UPDATE_JOURNAL_DATA = gql`
 `;
 
 const DELETE_JOURNAL = gql`
-  mutation($input: String) {
+  mutation deleteJournal($input: String) {
     deleteJournal(id: $input) {
       success
       message
@@ -74,20 +80,12 @@ const DELETE_JOURNAL = gql`
         data {
           events
           condition
+          notes
+          timeStamp
         }
       }
     }
   }
 `;
 
-const UPDATE_CAUSALITY = gql`
-  mutation($input: UpdateCausality) {
-    updateCausality(updateCausality: $input) {
-      success
-      message
-      causality
-    }
-  }
-`;
-
-export { CREATE_JOURNAL };
+export { CREATE_JOURNAL, UPDATE_JOURNAL_DATA, DELETE_JOURNAL };

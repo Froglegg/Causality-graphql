@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
-import { spacing } from "@material-ui/system";
 import Snackbar from "../../Components/Snackbar";
 
 import FormDialog from "./formDialog";
@@ -12,8 +10,6 @@ import EditProfile from "./editProfile";
 
 import { UPDATE_USER, DELETE_USER } from "../../GQL/mutations/users";
 import { GET_USER_INFO } from "../../GQL/queries/users";
-
-import { Redirect } from "@reach/router";
 
 import { useApolloClient, useMutation, useQuery } from "@apollo/react-hooks";
 

@@ -8,7 +8,6 @@ const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
 const UserAPI = require("./datasources/user");
 const JournalsAPI = require("./datasources/journals");
-const EventsAPI = require("./datasources/events");
 const engine = require("./engine");
 
 const SERVER = new ApolloServer({
@@ -28,7 +27,6 @@ const SERVER = new ApolloServer({
   dataSources: () => ({
     userAPI: new UserAPI(store),
     JournalsAPI: new JournalsAPI(store),
-    EventsAPI: new EventsAPI(store),
   }),
 
   engine: {

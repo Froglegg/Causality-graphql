@@ -8,8 +8,6 @@ exports.up = function (knex) {
     table.text("notes");
     table.boolean("public");
     table.json("data");
-    table.json("events");
-    table.float("causality");
     table.timestamp("created_at").defaultTo(knex.fn.now());
   });
 };

@@ -10,60 +10,33 @@ import Paper from "@material-ui/core/Paper";
 
 import { IconButton } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
 
 import { useQuery } from "@apollo/react-hooks";
-import { READ_ALL_EVENTS } from "../../../../GQL/queries/events";
-
-interface Event {
-  event: string;
-  condition: boolean;
-}
+import { READ_JOURNAL } from "../../../../GQL/queries/journals";
 
 const useStyles = makeStyles((theme) => ({
   table: {
     padding: theme.spacing(2),
     textAlign: "left",
     color: theme.palette.text.secondary,
-    minHeight: "30vh",
-    maxHeight: "30vh",
+    minHeight: "40vh",
+    maxHeight: "40vh",
+    width: "100%",
     overflow: "auto",
   },
 }));
 
-function createData(
-  event: string,
-  positive: number,
-  negative: number,
-  causality: string
-) {
-  return { event, positive, negative, causality };
-}
-
 export default function JournalTable(props: any) {
   const classes = useStyles();
   const { journal = {} } = props;
-  const { data, loading, error } = useQuery(READ_ALL_EVENTS, {
+  const { data, loading, error, refetch } = useQuery(READ_JOURNAL, {
     variables: {
-      journalId: journal.id,
+      id: journal.id,
     },
   });
-  if (!loading && !error) {
-    console.log(data);
-  }
-  // const [events, setEvents] = React.useState<[Event]>(() => {
-  //   return data
-  //     .map((e: any) => {
-  //       const objArr = e.events.map((str: any) => {
-  //         return {
-  //           event: str,
-  //           condition: e.condition,
-  //         };
-  //       });
-  //       return objArr;
-  //     })
-  //     .flat();
-  // });
+  React.useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <TableContainer className={classes.table} component={Paper}>
@@ -81,22 +54,22 @@ export default function JournalTable(props: any) {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Event</TableCell>
-            <TableCell>Positives</TableCell>
-            <TableCell>Negatives</TableCell>
-            <TableCell>Causality</TableCell>
+            <TableCell>Events</TableCell>
+            <TableCell>Condition</TableCell>
+            <TableCell>Notes</TableCell>
+            <TableCell>Timestamp</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data && data.readAllEvents && data.readAllEvents.length
-            ? data.readAllEvents.map((row: any, idx: number) => (
+          {data && data.readJournal && data.readJournal.data
+            ? data.readJournal.data.map((row: any, idx: number) => (
                 <TableRow key={`${idx} - ${row.event}`}>
                   <TableCell component="th" scope="row">
-                    {row.event}
+                    {row.events.join(", ")}
                   </TableCell>
-                  <TableCell>{row.positives}</TableCell>
-                  <TableCell>{row.negatives}</TableCell>
-                  <TableCell>{row.causality}</TableCell>
+                  <TableCell>{row.condition ? "True" : "False"}</TableCell>
+                  <TableCell>{row.notes}</TableCell>
+                  <TableCell>{row.timeStamp}</TableCell>
                 </TableRow>
               ))
             : null}

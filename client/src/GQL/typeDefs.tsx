@@ -1,29 +1,6 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
-  extend type Query {
-    isLoggedIn: Boolean!
-    findMe: User
-    findUserById(id: String): User
-    readJournal(id: String): Journal
-    readAllJournals: [Journal]
-    readMyJournals: [Journal]
-  }
-  extend type Mutation {
-    createUser(userInput: UserInput!): UserAPIResponse!
-    login(loginInput: UserInput!): UserAPIResponse!
-    logout(token: String): UserAPIResponse!
-    updateUser(
-      email: String!
-      updateUserInput: updateUserInput
-    ): UserAPIResponse
-    deleteUser(password: String!): UserAPIResponse
-    createJournal(journalInput: JournalInput): JournalAPIResponse
-    updateJournal(updateJournalInput: UpdateJournalInput): JournalAPIResponse
-    updateJournalData(updateJournalData: UpdateJournalData): JournalAPIResponse
-    updateCausality(updateCausality: UpdateCausality): CausalityResponse
-    deleteJournal(id: String): JournalAPIResponse
-  }
   type User {
     id: ID
     email: String
@@ -64,13 +41,14 @@ export const typeDefs = gql`
     notes: String
     public: Boolean
     data: [JournalData]
-    causality: String
     created_at: String
   }
 
   type JournalData {
     events: [String]
     condition: Boolean
+    notes: String
+    timeStamp: String
   }
 
   input JournalInput {
@@ -93,11 +71,8 @@ export const typeDefs = gql`
   input JournalDataInput {
     events: [String]
     condition: Boolean
-  }
-
-  input UpdateCausality {
-    id: String
-    causality: Float
+    notes: String
+    timeStamp: String
   }
 
   type JournalAPIResponse {
@@ -107,9 +82,27 @@ export const typeDefs = gql`
     journals: [Journal]
   }
 
-  type CausalityResponse {
-    success: Boolean!
-    message: String
-    causality: Float
+  extend type Query {
+    isLoggedIn: Boolean!
+    findMe: User
+    findUserById(id: String): User
+    readJournal(id: String): Journal
+    readAllJournals: [Journal]
+    readMyJournals: [Journal]
+  }
+
+  extend type Mutation {
+    createUser(userInput: UserInput!): UserAPIResponse!
+    login(loginInput: UserInput!): UserAPIResponse!
+    logout(token: String): UserAPIResponse!
+    updateUser(
+      email: String!
+      updateUserInput: updateUserInput
+    ): UserAPIResponse
+    deleteUser(password: String!): UserAPIResponse
+    createJournal(journalInput: JournalInput): JournalAPIResponse
+    updateJournal(updateJournalInput: UpdateJournalInput): JournalAPIResponse
+    updateJournalData(updateJournalData: UpdateJournalData): JournalAPIResponse
+    deleteJournal(id: String): JournalAPIResponse
   }
 `;

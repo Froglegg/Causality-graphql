@@ -10,7 +10,12 @@ import JournalList from "../JournalList/JournalList";
 
 function MyJournals(props: any) {
   const { data, loading, error } = useQuery(READ_MY_JOURNALS);
-
+  if (!loading && !error) {
+    console.log(data);
+  }
+  if (error) {
+    console.log(error);
+  }
   return (
     <Grid>
       <Grid item xs={12}>

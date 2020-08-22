@@ -4,11 +4,8 @@ import PublicJournals from "./Tabs/PublicJournals";
 import MyJournals from "./Tabs/MyJournals";
 import CreateJournal from "./Tabs/CreateJournal";
 import SimpleTabs from "../../Components/Tabs/Tabs";
-import AddIcon from "@material-ui/icons/Add";
 
 function Journals(props: any) {
-  const [createJournal, handleCreateJournal] = React.useState(false);
-
   return (
     <>
       <h1>Journals</h1>

@@ -4,7 +4,7 @@ const port = process.env.PORT || 4000;
 const helmet = require("helmet"); // creates headers that protect from attacks (security)
 const cors = require("cors"); // allows/disallows cross-site communication
 const corsOptions = require("./corsOptions");
-const morgan = require("morgan"); // logs requests, use "tiny" or "combined"
+// const morgan = require("morgan"); // logs requests, use "tiny" or "combined"
 
 // instantiate app
 const app = express();

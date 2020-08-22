@@ -1,32 +1,59 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-
-import { IconButton } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import moment from "moment";
+import {
+  makeStyles,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  IconButton,
+  Paper,
+} from "@material-ui/core";
 
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Button from "@material-ui/core/Button";
+import { useMutation } from "@apollo/react-hooks";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { UPDATE_JOURNAL_DATA } from "../../../../GQL/mutations/journals";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: "left",
     color: theme.palette.text.secondary,
-    minHeight: "30vh",
-    maxHeight: "30vh",
+    minHeight: "40vh",
+    maxHeight: "40vh",
+    width: "100%",
     overflow: "auto",
   },
 }));
 
 function JournalAddEntry(props: any) {
   const classes = useStyles();
+
+  const [
+    updateJournalData,
+    { loading: addEntryLoading, error: addEntryError },
+  ] = useMutation<any>(UPDATE_JOURNAL_DATA, {
+    onCompleted({ updateJournalData }) {
+      if (!updateJournalData.success) {
+        props.setSnackBar({
+          open: true,
+          message: updateJournalData.message,
+        });
+      } else {
+        props.setSnackBar({
+          open: true,
+          message: updateJournalData.message,
+        });
+        props.setView("table");
+      }
+    },
+  });
+
   const [entry, setEntry] = React.useState({
     events: "",
     condition: false,
+    notes: "",
   });
   return (
     <Paper className={classes.paper}>
@@ -42,16 +69,36 @@ function JournalAddEntry(props: any) {
           <CloseIcon style={{ color: "#b71d1a" }} />
         </IconButton>
       </h4>
-      <p>Enter events, separated by commas.</p>
+      <p>Enter events that you want to record, separated by commas.</p>
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          const data = [
+            {
+              events: entry.events.split(",").map((el) => el.trim()),
+              condition: entry.condition,
+              notes: entry.notes,
+              timeStamp: moment().format("DD-MM-YYYY HH:mm"),
+            },
+          ]
+            .concat(props.journal.data ? props.journal.data : [])
+            .map((el) => {
+              return {
+                events: el.events,
+                condition: el.condition,
+                notes: el.notes || "",
+                timeStamp: el.timeStamp || "",
+              };
+            });
 
-          const data = {
-            events: entry.events.split(",").map((el) => el.trim()),
-            condition: entry.condition,
-          };
-          console.log(data);
+          updateJournalData({
+            variables: {
+              input: {
+                id: props.journal.id,
+                data: data,
+              },
+            },
+          });
         }}
       >
         <TextField
@@ -72,6 +119,22 @@ function JournalAddEntry(props: any) {
           }}
           value={entry.events}
         />{" "}
+        <TextField
+          size={"small"}
+          variant={"outlined"}
+          margin="normal"
+          fullWidth
+          id={"notes"}
+          label={"Notes"}
+          name={"notes"}
+          onChange={(e) => {
+            setEntry({
+              ...entry,
+              notes: e.target.value,
+            });
+          }}
+          value={entry.notes}
+        />{" "}
         <FormControlLabel
           control={
             <Checkbox
@@ -86,7 +149,7 @@ function JournalAddEntry(props: any) {
               color={"primary"}
             />
           }
-          label={"Condition"}
+          label={`${props.journal.condition || "Condition"}`}
         />
         <Button type="submit">Submit</Button>
       </form>

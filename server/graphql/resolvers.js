@@ -5,16 +5,25 @@ module.exports = {
     // protected API route
     allUsers: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
-      const users = await dataSources.userAPI.findAllUsers();
-      return users;
+      if (decoded) {
+        const users = await dataSources.userAPI.findAllUsers();
+        return users;
+      }
     },
     findUser: async (parent, args, { dataSources, req }) => {
-      const user = await dataSources.userAPI.findUser(args);
-      return user;
+      const decoded = decodedToken(req);
+      if (decoded) {
+        const user = await dataSources.userAPI.findUser(args);
+        return user;
+      }
     },
     findUserById: async (parent, args, { dataSources, req }) => {
-      const user = await dataSources.userAPI.findUserById(args.id);
-      return user;
+      const decoded = decodedToken(req);
+
+      if (decoded) {
+        const user = await dataSources.userAPI.findUserById(args.id);
+        return user;
+      }
     },
     isLoggedIn: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
@@ -50,32 +59,16 @@ module.exports = {
     readMyJournals: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       const userId = decoded.id;
+      console.log(userId);
       if (decoded) {
         const journals = await dataSources.JournalsAPI.readMyJournals(userId);
         return journals;
-      }
-    },
-    readEvent: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-      if (decoded) {
-        const event = await dataSources.EventsAPI.readEvent(args.id);
-        return event;
-      }
-    },
-    readAllEvents: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-      if (decoded) {
-        const events = await dataSources.EventsAPI.readAllEvents(
-          args.journalId
-        );
-        return events;
       }
     },
   },
   Mutation: {
     createUser: async (parent, args, { dataSources, req }) => {
       const newUser = await dataSources.userAPI.createUser(args.userInput);
-
       return {
         success:
           !newUser || newUser == null || newUser.emailInvalid || newUser.error
@@ -191,7 +184,6 @@ module.exports = {
     },
     updateJournal: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
-
       if (decoded) {
         const updateJournal = await dataSources.JournalsAPI.updateJournal(
           args.updateJournalInput
@@ -232,28 +224,6 @@ module.exports = {
       }
     },
 
-    updateCausality: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-      if (decoded) {
-        const updateCausality = await dataSources.JournalsAPI.updateCausality(
-          args.updateCausality
-        );
-        return {
-          success:
-            !updateCausality ||
-            updateCausality === null ||
-            updateCausality.error
-              ? false
-              : true,
-          message:
-            !updateCausality || updateCausality.error
-              ? `500 error, details ${updateCausality.error}`
-              : "Success!",
-          causality: updateCausality,
-        };
-      }
-    },
-
     deleteJournal: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
 
@@ -271,89 +241,6 @@ module.exports = {
               ? `500 error, details ${deleteJournal.error}`
               : "Success!",
           journal: deleteJournal,
-        };
-      }
-    },
-
-    updateJournalEvents: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-
-      if (decoded) {
-        const updatedEvents = await dataSources.JournalsAPI.updateEvents(
-          args.id,
-          args.eventDataInput
-        );
-
-        return {
-          success:
-            !updatedEvents || updatedEvents === null || updatedEvents.error
-              ? false
-              : true,
-          message:
-            !updatedEvents || updatedEvents.error
-              ? `500 error, details ${updatedEvents.error}`
-              : "Success!",
-          journal: updatedEvents,
-        };
-      }
-    },
-
-    createEvent: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-      if (decoded) {
-        const createEvent = await dataSources.EventsAPI.createEvent(
-          args.eventInput
-        );
-        return {
-          success:
-            !createEvent || createEvent === null || createEvent.error
-              ? false
-              : true,
-          message:
-            !createEvent || createEvent.error
-              ? `500 error, details ${createEvent.error}`
-              : "Success!",
-          event: createEvent,
-        };
-      }
-    },
-    updateEvent: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-      console.log(args);
-
-      if (decoded) {
-        const updateEvent = await dataSources.EventsAPI.updateEvent(
-          args.updateEventInput
-        );
-        return {
-          success:
-            !updateEvent || updateEvent === null || updateEvent.error
-              ? false
-              : true,
-          message:
-            !updateEvent || updateEvent.error
-              ? `500 error, details ${updateEvent.error}`
-              : "Success!",
-          event: updateEvent,
-        };
-      }
-    },
-
-    deleteEvent: async (parent, args, { dataSources, req }) => {
-      const decoded = decodedToken(req);
-
-      if (decoded) {
-        const deleteEvent = await dataSources.EventsAPI.deleteEvent(args.id);
-        return {
-          success:
-            !deleteEvent || deleteEvent === null || deleteEvent.error
-              ? false
-              : true,
-          message:
-            !deleteEvent || deleteEvent.error
-              ? `500 error, details ${deleteEvent.error}`
-              : "Success!",
-          event: deleteEvent,
         };
       }
     },

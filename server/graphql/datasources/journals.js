@@ -61,6 +61,7 @@ class JournalsAPI extends DataSource {
   };
 
   readMyJournals = async (userId) => {
+    console.log("here");
     const readMyJournals = await this.store("journals")
       .where({ user: userId })
       .then((res) => {
@@ -87,6 +88,8 @@ class JournalsAPI extends DataSource {
   };
 
   updateJournalData = async (putData) => {
+    console.log("datasource");
+    console.log(putData);
     const updateJournalData = await this.store("journals")
       .where({ id: putData.id })
       .update({ data: JSON.stringify(putData.data) })
@@ -98,21 +101,6 @@ class JournalsAPI extends DataSource {
         return { error: err };
       });
     return updateJournalData ? updateJournalData : false;
-  };
-
-  updateCausality = async (putData) => {
-    const updateCausality = await this.store("journals")
-      .where({ id: putData.id })
-      .update({ causality: putData.causality })
-      .returning("causality")
-      .then((res) => {
-        return res[0] ? res[0] : null;
-      })
-      .catch((err) => {
-        return { error: err };
-      });
-
-    return updateCausality ? updateCausality : false;
   };
 
   deleteJournal = async (journalId) => {
@@ -128,24 +116,6 @@ class JournalsAPI extends DataSource {
       });
 
     return deleteJournal ? deleteJournal : false;
-  };
-
-  updateEvents = async (journalId, events) => {
-    const updateEvents = await this.store("journals")
-      .where({ id: journalId })
-      .update({
-        events: events,
-      })
-      .returning("*")
-      .then((res) => {
-        return res[0] ? res[0] : null;
-      })
-      .catch((err) => {
-        console.log(err);
-        return { error: err };
-      });
-
-    return updateEvents ? updateEvents : false;
   };
 }
 

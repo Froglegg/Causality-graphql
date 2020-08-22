@@ -1,54 +1,57 @@
 import gql from "graphql-tag";
 
 const READ_JOURNAL = gql`
-  query($id: String) {
+  query readJournal($id: String) {
     readJournal(id: $id) {
       id
       user
       journalName
       condition
-      causality
       notes
       public
       data {
         events
         condition
+        notes
+        timeStamp
       }
     }
   }
 `;
 
 const READ_ALL_JOURNALS = gql`
-  query {
+  query readAllJournals {
     readAllJournals {
       id
       user
       journalName
       condition
-      causality
       notes
       public
       data {
         events
         condition
+        notes
+        timeStamp
       }
     }
   }
 `;
 
 const READ_MY_JOURNALS = gql`
-  query {
+  query readMyJournals {
     readMyJournals {
       id
       user
       journalName
       condition
-      causality
       notes
       public
       data {
         events
         condition
+        notes
+        timeStamp
       }
     }
   }
