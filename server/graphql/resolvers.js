@@ -59,7 +59,6 @@ module.exports = {
     readMyJournals: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       const userId = decoded.id;
-      console.log(userId);
       if (decoded) {
         const journals = await dataSources.JournalsAPI.readMyJournals(userId);
         return journals;

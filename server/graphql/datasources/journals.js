@@ -61,7 +61,6 @@ class JournalsAPI extends DataSource {
   };
 
   readMyJournals = async (userId) => {
-    console.log("here");
     const readMyJournals = await this.store("journals")
       .where({ user: userId })
       .then((res) => {
@@ -88,8 +87,6 @@ class JournalsAPI extends DataSource {
   };
 
   updateJournalData = async (putData) => {
-    console.log("datasource");
-    console.log(putData);
     const updateJournalData = await this.store("journals")
       .where({ id: putData.id })
       .update({ data: JSON.stringify(putData.data) })
