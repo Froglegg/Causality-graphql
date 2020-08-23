@@ -9,11 +9,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import JournalList from "../JournalList/JournalList";
 
 function MyJournals(props: any) {
-  const { data, loading, error } = useQuery(READ_MY_JOURNALS);
+  const { data, loading, error, refetch } = useQuery(READ_MY_JOURNALS);
 
-  if (error) {
-    console.log(error);
-  }
+  React.useEffect(() => {
+    refetch();
+  }, []);
+
   return (
     <Grid>
       <Grid item xs={12}>
@@ -22,7 +23,7 @@ function MyJournals(props: any) {
         ) : loading ? (
           <CircularProgress />
         ) : data ? (
-          <JournalList items={data.readMyJournals} />
+          <JournalList items={data.readMyJournals} refetch={() => refetch()} />
         ) : null}
       </Grid>
     </Grid>

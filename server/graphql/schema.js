@@ -38,6 +38,7 @@ const TYPEDEFS = gql`
     user: ID
     journalName: String
     condition: String
+    causality: String
     notes: String
     public: Boolean
     data: [JournalData]
@@ -61,6 +62,7 @@ const TYPEDEFS = gql`
   input UpdateJournalData {
     id: String
     data: [JournalDataInput]
+    condition: String
   }
 
   input JournalDataInput {

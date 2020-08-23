@@ -51,7 +51,7 @@ class JournalsAPI extends DataSource {
     const journals = await this.store("journals")
       .where({ public: true })
       .then((res) => {
-        return res && res.length ? res : null;
+        return res && res.length ? res : [];
       })
       .catch((err) => {
         return { error: err };
@@ -64,7 +64,7 @@ class JournalsAPI extends DataSource {
     const readMyJournals = await this.store("journals")
       .where({ user: userId })
       .then((res) => {
-        return res && res.length ? res : null;
+        return res && res.length ? res : [];
       })
       .catch((err) => {
         return { error: err };
@@ -89,7 +89,10 @@ class JournalsAPI extends DataSource {
   updateJournalData = async (putData) => {
     const updateJournalData = await this.store("journals")
       .where({ id: putData.id })
-      .update({ data: JSON.stringify(putData.data) })
+      .update({
+        causality: putData.causality,
+        data: JSON.stringify(putData.data),
+      })
       .returning("*")
       .then((res) => {
         return res[0] ? res[0] : null;

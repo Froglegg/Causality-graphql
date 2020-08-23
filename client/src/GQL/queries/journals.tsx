@@ -7,6 +7,7 @@ const READ_JOURNAL = gql`
       user
       journalName
       condition
+      causality
       notes
       public
       data {
@@ -26,6 +27,7 @@ const READ_ALL_JOURNALS = gql`
       user
       journalName
       condition
+      causality
       notes
       public
       data {
@@ -45,6 +47,7 @@ const READ_MY_JOURNALS = gql`
       user
       journalName
       condition
+      causality
       notes
       public
       data {

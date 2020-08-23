@@ -1,5 +1,5 @@
 const { decodedToken } = require("./authenticate");
-
+const { causality } = require("../utils/causality");
 module.exports = {
   Query: {
     // protected API route
@@ -163,6 +163,9 @@ module.exports = {
     createJournal: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
       const userId = decoded.id;
+
+      args.journalInput.causality = causality([], args.journalInput.condition);
+
       if (decoded) {
         const createJournal = await dataSources.JournalsAPI.createJournal(
           args.journalInput,
@@ -183,6 +186,7 @@ module.exports = {
     },
     updateJournal: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
+
       if (decoded) {
         const updateJournal = await dataSources.JournalsAPI.updateJournal(
           args.updateJournalInput
@@ -203,9 +207,14 @@ module.exports = {
 
     updateJournalData: async (parent, args, { dataSources, req }) => {
       const decoded = decodedToken(req);
+      const dataCopy = [...args.updateJournalData.data];
+
       if (decoded) {
         const updateJournalData = await dataSources.JournalsAPI.updateJournalData(
-          args.updateJournalData
+          {
+            ...args.updateJournalData,
+            causality: causality(dataCopy, args.updateJournalData.condition),
+          }
         );
         return {
           success:

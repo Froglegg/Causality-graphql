@@ -19,7 +19,6 @@ import LocalLibraryRoundedIcon from "@material-ui/icons/LocalLibraryRounded";
 import JournalDetail from "./JournalDetail/JournalDetail";
 
 import { DELETE_JOURNAL } from "../../../GQL/mutations/journals";
-import { causality } from "../../../utils/causality";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -88,9 +87,8 @@ export default function JournalList(props: any) {
     { loading: deleteJournalLoading, error: deleteJournalError },
   ] = useMutation<any>(DELETE_JOURNAL, {
     onCompleted({ deleteJournal }) {
-      if (!deleteJournal.success) {
-      } else {
-      }
+      console.log(deleteJournal);
+      props.refetch();
     },
   });
 
@@ -101,7 +99,7 @@ export default function JournalList(props: any) {
       <List component="nav" aria-label="main mailbox folders">
         {props.items && props.items.length
           ? props.items.map((item: journalProvider, idx: number) => (
-              <React.Fragment key={item.id}>
+              <React.Fragment key={`${idx} - ${item.id}`}>
                 <ListItem
                   button
                   key={item.id}
@@ -152,16 +150,16 @@ export default function JournalList(props: any) {
                       <p style={{ whiteSpace: "pre-wrap" }}>{item.notes}</p>
                       <h4 style={{ marginTop: 10 }}>Causality</h4>
                       <p style={{ whiteSpace: "pre-wrap" }}>
-                        {item.data && item.data.length
-                          ? causality(item.data, item.condition)
-                          : "No data to analyze yet. Add some entries to determine the cause of the condition."}
+                        {item.causality || ""}
                       </p>
                       <br />
                       <Button
                         style={{ float: "right" }}
                         color={"secondary"}
                         onClick={() => {
-                          deleteJournal({ variables: { input: item.id } });
+                          deleteJournal({
+                            variables: { input: item.id },
+                          });
                         }}
                       >
                         Delete Journal

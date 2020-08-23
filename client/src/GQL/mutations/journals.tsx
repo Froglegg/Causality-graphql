@@ -6,9 +6,11 @@ const CREATE_JOURNAL = gql`
       success
       message
       journal {
+        id
         user
         journalName
         condition
+        causality
         notes
         public
         data {
@@ -28,9 +30,11 @@ const UPDATE_JOURNAL = gql`
       success
       message
       journal {
+        id
         user
         journalName
         condition
+        causality
         notes
         public
         data {
@@ -50,9 +54,11 @@ const UPDATE_JOURNAL_DATA = gql`
       success
       message
       journal {
+        id
         user
         journalName
         condition
+        causality
         notes
         public
         data {
@@ -72,9 +78,11 @@ const DELETE_JOURNAL = gql`
       success
       message
       journal {
+        id
         user
         journalName
         condition
+        causality
         notes
         public
         data {

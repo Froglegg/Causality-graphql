@@ -34,6 +34,7 @@ export default function JournalTable(props: any) {
       id: journal.id,
     },
   });
+
   React.useEffect(() => {
     refetch();
   }, []);

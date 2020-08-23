@@ -45,6 +45,7 @@ function JournalAddEntry(props: any) {
           open: true,
           message: updateJournalData.message,
         });
+        setEntry({ events: "", condition: false, notes: "" });
         props.setView("table");
       }
     },
@@ -75,7 +76,11 @@ function JournalAddEntry(props: any) {
           e.preventDefault();
           const data = [
             {
-              events: entry.events.split(",").map((el) => el.trim()),
+              events: [
+                ...new Set(
+                  entry.events.split(",").map((el) => el.trim().toLowerCase())
+                ),
+              ],
               condition: entry.condition,
               notes: entry.notes,
               timeStamp: moment().format("DD-MM-YYYY HH:mm"),
@@ -90,12 +95,13 @@ function JournalAddEntry(props: any) {
                 timeStamp: el.timeStamp || "",
               };
             });
-
+          console.log(data);
           updateJournalData({
             variables: {
               input: {
                 id: props.journal.id,
                 data: data,
+                condition: props.journal.condition,
               },
             },
           });

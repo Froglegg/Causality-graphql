@@ -37,6 +37,7 @@ export const typeDefs = gql`
     id: ID
     user: ID
     journalName: String
+    causality: String
     condition: String
     notes: String
     public: Boolean
@@ -66,6 +67,7 @@ export const typeDefs = gql`
   input UpdateJournalData {
     id: String
     data: [JournalDataInput]
+    condition: String
   }
 
   input JournalDataInput {

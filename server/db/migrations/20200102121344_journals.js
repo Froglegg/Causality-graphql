@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.foreign("user").references("users.id");
     table.string("journalName", 255);
     table.string("condition", 255);
+    table.text("causality");
     table.text("notes");
     table.boolean("public");
     table.json("data");
