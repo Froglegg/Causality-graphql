@@ -82,12 +82,8 @@ export default function JournalList(props: any) {
     });
   };
 
-  const [
-    deleteJournal,
-    { loading: deleteJournalLoading, error: deleteJournalError },
-  ] = useMutation<any>(DELETE_JOURNAL, {
+  const [deleteJournal] = useMutation<any>(DELETE_JOURNAL, {
     onCompleted({ deleteJournal }) {
-      console.log(deleteJournal);
       props.refetch();
     },
   });

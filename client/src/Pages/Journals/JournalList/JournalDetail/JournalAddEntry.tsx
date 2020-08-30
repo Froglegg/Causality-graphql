@@ -30,10 +30,7 @@ const useStyles = makeStyles((theme) => ({
 function JournalAddEntry(props: any) {
   const classes = useStyles();
 
-  const [
-    updateJournalData,
-    { loading: addEntryLoading, error: addEntryError },
-  ] = useMutation<any>(UPDATE_JOURNAL_DATA, {
+  const [updateJournalData] = useMutation<any>(UPDATE_JOURNAL_DATA, {
     onCompleted({ updateJournalData }) {
       if (!updateJournalData.success) {
         props.setSnackBar({
@@ -95,7 +92,7 @@ function JournalAddEntry(props: any) {
                 timeStamp: el.timeStamp || "",
               };
             });
-          console.log(data);
+
           updateJournalData({
             variables: {
               input: {

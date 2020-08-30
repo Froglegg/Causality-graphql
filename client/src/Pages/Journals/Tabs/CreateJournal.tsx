@@ -8,8 +8,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import TextField from "@material-ui/core/TextField";
 
-import { useApolloClient, useMutation } from "@apollo/react-hooks";
-import ApolloClient from "apollo-client";
+import { useMutation } from "@apollo/react-hooks";
 
 import { CREATE_JOURNAL } from "../../../GQL/mutations/journals";
 import Snackbar from "../../../Components/Snackbar";
@@ -56,10 +55,7 @@ function CreateJournal(props: any) {
     });
   };
 
-  const [
-    createJournal,
-    { loading: newJournalLoading, error: newJournalError },
-  ] = useMutation<any>(CREATE_JOURNAL, {
+  const [createJournal] = useMutation<any>(CREATE_JOURNAL, {
     onCompleted({ createJournal }) {
       if (!createJournal.success) {
         setSnackBar({

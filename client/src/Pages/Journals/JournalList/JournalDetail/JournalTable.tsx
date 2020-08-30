@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 export default function JournalTable(props: any) {
   const classes = useStyles();
   const { journal = {} } = props;
-  const { data, loading, error, refetch } = useQuery(READ_JOURNAL, {
+  const { data, refetch } = useQuery(READ_JOURNAL, {
     variables: {
       id: journal.id,
     },
@@ -37,7 +37,7 @@ export default function JournalTable(props: any) {
 
   React.useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   return (
     <TableContainer className={classes.table} component={Paper}>

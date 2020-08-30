@@ -6,6 +6,8 @@ const whitelist = [
   "http://localhost:4000",
   "http://localhost:4000/",
   "https://causality-app.herokuapp.com",
+  "http://ec2-3-129-43-146.us-east-2.compute.amazonaws.com:4000",
+  "http://ec2-3-129-43-146.us-east-2.compute.amazonaws.com:3000",
 ];
 const corsOptions = {
   origin: function (origin, callback) {

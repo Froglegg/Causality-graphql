@@ -13,7 +13,7 @@ function MyJournals(props: any) {
 
   React.useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   return (
     <Grid>

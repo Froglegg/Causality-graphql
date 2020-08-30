@@ -24,29 +24,29 @@ const CREATE_JOURNAL = gql`
   }
 `;
 
-const UPDATE_JOURNAL = gql`
-  mutation updateJournal($input: UpdateJournalInput) {
-    updateJournal(updateJournalInput: $input) {
-      success
-      message
-      journal {
-        id
-        user
-        journalName
-        condition
-        causality
-        notes
-        public
-        data {
-          events
-          condition
-          notes
-          timeStamp
-        }
-      }
-    }
-  }
-`;
+// const UPDATE_JOURNAL = gql`
+//   mutation updateJournal($input: UpdateJournalInput) {
+//     updateJournal(updateJournalInput: $input) {
+//       success
+//       message
+//       journal {
+//         id
+//         user
+//         journalName
+//         condition
+//         causality
+//         notes
+//         public
+//         data {
+//           events
+//           condition
+//           notes
+//           timeStamp
+//         }
+//       }
+//     }
+//   }
+// `;
 
 const UPDATE_JOURNAL_DATA = gql`
   mutation updateJournalData($input: UpdateJournalData) {

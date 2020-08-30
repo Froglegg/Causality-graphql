@@ -1,6 +1,6 @@
 import { ApolloCache } from "apollo-cache";
 import { Resolvers } from "apollo-client";
-import gql from "graphql-tag";
+
 import { GET_USER_INFO } from "./queries/users";
 type ResolverFn = (
   parent: any,

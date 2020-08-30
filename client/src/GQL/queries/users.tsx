@@ -11,13 +11,13 @@ const GET_USER_INFO = gql`
   }
 `;
 
-const FIND_USER = gql`
-  query($id: String) {
-    findUserById(id: $id) {
-      id
-      userName
-      hobby
-    }
-  }
-`;
+// const FIND_USER = gql`
+//   query($id: String) {
+//     findUserById(id: $id) {
+//       id
+//       userName
+//       hobby
+//     }
+//   }
+// `;
 export { GET_USER_INFO };
